@@ -1,0 +1,222 @@
+
+###
+POST http://localhost:9999/notification/668c076017a5f0a51a79cda5
+Content-Type: application/json
+
+{
+        "linkMeet": "",
+        "message": "hihihi"
+}
+
+###
+POST http://localhost:9999/user/login
+Content-Type: application/json
+
+{
+        "identifier": "vanhleg6969",
+        "password": "123"
+}
+
+###
+GET http://localhost:9999/order/
+Content-Type: application/json
+
+###
+GET https://api-merchant.payos.vn/v2/payment-requests/544908
+Content-Type: application/json
+x-client-id: b52613c4-55b2-47b8-ba28-e5ecd8af5ed1
+x-api-key: 4d2cec80-77bf-4a24-b852-387c5e874adc
+
+
+###
+GET https://oauth.casso.vn/v2/transactions
+Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbGw8SEXsAl9oW1BG6KkZjNBsnxGiJGS2wExBhmQL3VxYUrOXfDEja4Z
+
+###
+GET https://oauth.casso.vn/v2/webhooks
+Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbGw8SEXsAl9oW1BG6KkZjNBsnxGiJGS2wExBhmQL3VxYUrOXfDEja4Z
+
+###
+GET https://oauth.casso.vn/v2/userInfo
+Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbGw8SEXsAl9oW1BG6KkZjNBsnxGiJGS2wExBhmQL3VxYUrOXfDEja4Z
+
+###
+GET https://api-merchant.payos.vn
+
+
+###
+POST http://localhost:9999/order/confirm-webhook
+Content-Type: application/json
+
+{
+        "webhookUrl": "https://api-merchant.payos.vn"
+}
+
+###
+GET https://my.payos.vn/ebdfe70d394711ef99770242ac110002/payment-link
+
+###
+POST https://api-merchant.payos.vn/confirm-webhook
+Content-Type: application/json
+x-client-id: b52613c4-55b2-47b8-ba28-e5ecd8af5ed1
+x-api-key: 4d2cec80-77bf-4a24-b852-387c5e874adc
+
+{
+        "webhookUrl": "https://api-merchant.payos.vn/v2/payment-requests"
+}
+
+###
+POST http://localhost:9999/payos/payos
+Content-Type: application/json
+
+{
+    "code": "00",
+    "desc": "success",
+    "data": {
+        "orderCode": 51420,
+        "amount": 2000,
+        "description": "Bronze package",
+        "accountNumber": "0001833909691",
+        "reference": "FT24193780576048",
+        "transactionDateTime": "2024-07-11T19:50:47+07:00",
+        "counterAccountBankId": "970454",
+        "counterAccountName": "MOMOIBFT412 NTMK",
+        "counterAccountNumber": "0697044105922"
+    },
+    "signature": "83b17b5d6b428a33efc963685eb7b062f42d5bba498bf4875ae7aa6775a0233f"
+}
+
+### 
+GET http://localhost:9999/order/t/transactions
+Content-Type: application/json
+
+###
+POST http://localhost:9999/order/create
+Content-Type: application/json
+
+{
+        "buyerName": "vanh",
+        "description": "ihih",
+        "returnUrl": "/result",
+        "cancelUrl": "/result",
+        "amount":"2",
+        "price": "4000"
+}
+
+
+
+
+
+###
+POST http://localhost:9999/notification/accept_applied/666583acd84ebdff8d212ba2
+Content-Type: application/json
+
+{
+        "message": "You have been accepted to the job"
+}
+
+###
+POST http://localhost:9999/appliedjobs/apply
+Content-Type: application/json
+
+{
+        "jobId": "667d76b20a67",
+        "applicantId": "666583acd84ebdff8d212ba2",
+        "cvFile": 
+}
+
+###
+POST http://localhost:9999/user/sendmailJob
+Content-Type: application/json
+
+{
+        "applicantId": "667d762a0a67fcd2fc809b97",
+        "jobId": "667d76b20a67fcd2fc809bc4"
+}
+
+###
+POST http://localhost:9999/forgot-password/sendmail
+Content-Type: application/json
+
+{
+        "email": "anh@gmail.com"
+}
+
+###
+http://localhost:9999/job/recruiter/6670513cc1cbee5da0024a1c
+
+
+### 
+GET http://localhost:9999/company/search?name=
+
+###
+POST http://localhost:9999/user/login
+Content-Type: application/json
+
+{
+        "identifier": "long123",
+        "password": "123"
+}
+
+
+###
+GET http://localhost:9999/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjU4M2FjZDg0ZWJkZmY4ZDIxMmJhMiIsImlhdCI6MTcxOTM3Mjk1NSwiZXhwIjoxNzE5MzcyOTcwfQ.ZvILr9I7GzlfK-1Qc-_IYtdwSTIJhZnNCmC0FGTxa5U
+
+###
+PUT http://localhost:9999/user/666583acd84ebdff8d212ba2
+Content-Type: application/json
+
+{
+        "fullName": "Doan Long 12345",
+        "phoneNumber": "030492ádasdasd34ádascasasca"
+}
+
+###
+GET http://localhost:9999/job/find?title=Software+Engineer&location=&experience=&minSalary=&maxSalary=
+
+
+###
+GET http://localhost:9999/job/recruiter/6667f45cc78bf282d571be88
+
+### Upload CV
+POST http://localhost:9999/cv/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="cvFile"; filename="hai.pdf"
+Content-Type: image/png
+
+< ./path/to/448594813_1173067050494946_7190240286702007045_n.png
+--boundary
+Content-Disposition: form-data; name="applicantID"
+
+666583acd84ebdff8d212ba2
+--boundary--
+
+
+###
+GET http://localhost:9999/company/search?name=Tech%20Innovators%20Inc.
+
+###
+POST http://localhost:9999/user/regis-recruiter
+Content-Type: application/json
+
+{
+        "username": "Manh2003",
+        "password": "123",
+        "email": "sdvsdvascascascascz@gmail.com",
+        "fullName": "Doan Son Manh",
+        "phoneNumber": "03049234"
+}
+
+
+###
+POST http://localhost:9999/auth/login
+Content-Type: application/json
+{
+        "identifier": "Manh2003@gmail.com",
+        "password": "DoanSon2003"
+}
+###
+

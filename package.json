@@ -1,0 +1,47 @@
+{
+    "name": "well-wiz-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node --watch server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@payos/node": "^1.0.8",
+        "age-calculator": "^1.0.0",
+        "bcrypt": "^5.1.1",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "express-fileupload": "^1.5.0",
+        "express-session": "^1.18.0",
+        "firebase": "^10.12.2",
+        "formidable": "^3.5.1",
+        "http-errors": "^2.0.0",
+        "js-cookie": "^3.0.5",
+        "jsonwebtoken": "^9.0.2",
+        "luxon": "^3.4.4",
+        "mongoose": "^8.4.0",
+        "multer": "^1.4.5-lts.1",
+        "node-cron": "^3.0.3",
+        "nodemailer": "^6.9.14",
+        "passport": "^0.7.0",
+        "passport-google-oauth2": "^0.2.0",
+        "passport-google-oauth20": "^2.0.0",
+        "path": "^0.12.7",
+        "save": "^2.9.0",
+        "socket.io": "^4.7.5",
+        "url": "^0.11.3",
+        "uuid": "^10.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.0"
+    }
+}
