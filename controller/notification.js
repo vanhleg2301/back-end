@@ -48,8 +48,24 @@ const AutoDeleteNotification = async () => {
   }
 };
 
+const deleteNotification = async (req, res) => {
+  const { notificationId } = req.params;
+
+  try {
+    if (!notificationId) {
+      throw new Error("notificationId is required");
+    }
+
+    await notificationDAO.deleteNotification(notificationId);
+    res.status(200).json({ message: "Notification deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   saveNotification,
   getSavedNotification,
   AutoDeleteNotification,
+  deleteNotification,
 };

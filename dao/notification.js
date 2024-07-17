@@ -42,10 +42,20 @@ const AutoDeleteNotification = async () => {
   }
 };
 
+const deleteNotification = async (notificationId) => {
+  try {
+    const result = await Notification.deleteOne({ _id: notificationId });
+    return result;
+  } catch (error) {
+    console.error("Delete fail:", error);
+    throw error;
+  }
+}
 
 
 export default {
   saveNotification,
   getSavedNotification,
-  AutoDeleteNotification
+  AutoDeleteNotification,
+  deleteNotification
 };

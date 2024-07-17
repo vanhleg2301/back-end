@@ -1,10 +1,10 @@
 
 ###
-POST http://localhost:9999/notification/668c076017a5f0a51a79cda5
+POST http://localhost:9999/user/sendMailFrame
 Content-Type: application/json
 
 {
-        "linkMeet": "",
+        "userId": "668c076017a5f0a51a79cda5",
         "message": "hihihi"
 }
 
@@ -27,6 +27,24 @@ Content-Type: application/json
 x-client-id: b52613c4-55b2-47b8-ba28-e5ecd8af5ed1
 x-api-key: 4d2cec80-77bf-4a24-b852-387c5e874adc
 
+### PAID
+GET http://localhost:9999/order/815465
+Content-Type: application/json
+### PENDDING
+GET http://localhost:9999/order/544908
+Content-Type: application/json
+### CANCELLED
+GET http://localhost:9999/order/784917
+Content-Type: application/json
+
+### 
+GET http://localhost:9999/order/status/544908
+Content-Type: application/json
+
+###
+GET https://oauth.casso.vn/v2/userInfo
+Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbGw8SEXsAl9oW1BG6KkZjNBsnxGiJGS2wExBhmQL3VxYUrOXfDEja4Z
+
 
 ###
 GET https://oauth.casso.vn/v2/transactions
@@ -34,10 +52,6 @@ Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbG
 
 ###
 GET https://oauth.casso.vn/v2/webhooks
-Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbGw8SEXsAl9oW1BG6KkZjNBsnxGiJGS2wExBhmQL3VxYUrOXfDEja4Z
-
-###
-GET https://oauth.casso.vn/v2/userInfo
 Authorization: Apikey AK_CS.ce65abe0413011ef90c3c9ff66e60f20.aXIXXch3XSkZRZxMbbGw8SEXsAl9oW1BG6KkZjNBsnxGiJGS2wExBhmQL3VxYUrOXfDEja4Z
 
 ###

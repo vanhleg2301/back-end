@@ -2,6 +2,8 @@ import { companiesDAO, userDAO } from "../dao/index.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { storage } from "../config/firebaseConfig.js";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Lấy đường dẫn hiện tại
 const __filename = fileURLToPath(import.meta.url);
@@ -67,69 +69,64 @@ const createCompany = async (req, res) => {
     if (!req.files.logo || !req.files.businessLicense) {
       return res
         .status(400)
-        .send("Both logo and BusinessLicense files are required.");
+        .send("Both logo and businessLicense files are required.");
     }
 
     let logoFile = req.files.logo;
     let businessLicenseFile = req.files.businessLicense;
 
-    const logoUploadPath = path.join(
-      __dirname,
-      "../uploads/logo",
-      logoFile.name
-    );
-    const businessLicenseUploadPath = path.join(
-      __dirname,
-      "../uploads/bussiness",
-      businessLicenseFile.name
-    );
+    // Reference to the storage location in Firebase
+    const fileRefLogo = ref(storage, `uploads/logo/${logoFile.name}`);
+    const fileRefBusiness = ref(storage, `uploads/business/${businessLicenseFile.name}`);
 
-    // Save the logo file
-    logoFile.mv(logoUploadPath, async (err) => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-
-      // Save the BusinessLicense file
-      businessLicenseFile.mv(businessLicenseUploadPath, async (err) => {
-        if (err) {
-          return res.status(500).send(err);
-        }
-
-        try {
-          // Create a new object containing extracted fields
-          const companyData = {
-            recruiterID,
-            companyName,
-            email,
-            phoneNumber,
-            location,
-            taxNumber,
-            numberOfEmployees,
-            companyStatus,
-            logo: `${logoFile.name}`, // Include logo path
-            businessLicense: `${businessLicenseFile.name}`, // Include BusinessLicense path
-          };
-
-          // Call companyDAO.createCompany to save the company
-          const newCompany = await companiesDAO.createCompany(companyData);
-
-          // update companyID in recruiterID
-          await userDAO.updateCompanyID(newCompany._id, recruiterID);
-
-          // Respond with status 201 (Created) and the newly created company data
-          res.status(200).json(newCompany);
-        } catch (error) {
-          // If an error occurs, respond with status 500 (Internal Server Error)
-          // and send the error message as JSON
-          res.status(500).json({ error: error.message });
-        }
-      });
+    // Upload files to Firebase Storage
+    const snapshotLogo = await uploadBytes(fileRefLogo, logoFile.data, {
+      contentType: logoFile.mimetype,
     });
+    const snapshotBusiness = await uploadBytes(fileRefBusiness, businessLicenseFile.data, {
+      contentType: businessLicenseFile.mimetype,
+    });
+
+    // Get download URLs for the files
+    const fileURLLogo = await getDownloadURL(snapshotLogo.ref);
+    const fileURLBusiness = await getDownloadURL(snapshotBusiness.ref);
+
+    // Define upload paths (if still needed, but Firebase storage handles it)
+    // const logoUploadPath = path.join(__dirname, "../uploads/logo", logoFile.name);
+    // const businessLicenseUploadPath = path.join(
+    //   __dirname,
+    //   "../uploads/business",
+    //   businessLicenseFile.name
+    // );
+
+    // Save company data
+    const companyData = {
+      recruiterID,
+      companyName,
+      email,
+      phoneNumber,
+      location,
+      taxNumber,
+      numberOfEmployees,
+      companyStatus,
+      logo: fileURLLogo,
+      businessLicense: fileURLBusiness,
+    };
+
+    // Call companiesDAO.createCompany to save the company
+    const newCompany = await companiesDAO.createCompany(companyData);
+
+    // Update companyID in recruiter's user profile
+    await userDAO.updateCompanyID(newCompany._id, recruiterID);
+
+    // Respond with status 200 and the newly created company data
+    res.status(200).json(newCompany);
   } catch (error) {
+    console.error("Error creating company:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const createCompanyWithNoFiles = async (req, res) => {
   try {

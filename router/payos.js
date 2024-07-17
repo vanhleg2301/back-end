@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import PayOS from "@payos/node";
 import crypto from "crypto";
+import User from "../models/users.js";
 
 dotenv.config();
 
@@ -14,22 +15,36 @@ const payOS = new PayOS(
 );
 
 const RECRUITER_JOB_LIMITS = {
-  package_1: {recruiterLevel: 1, jobPostingLimit: 5},
-  package_2: {recruiterLevel: 2, jobPostingLimit: 10},
-  package_3: {recruiterLevel: 3, jobPostingLimit: 15},
+  package_1: { recruiterLevel: 1, jobPostingLimit: 5 },
+  package_2: { recruiterLevel: 2, jobPostingLimit: 10 },
+  package_3: { recruiterLevel: 3, jobPostingLimit: 15 },
 };
 
 const updateLevel = async (recruiterId, pack) => {
   // Check payment package from https://api-merchant.payos.vn/v2/payment-requests/:id
   // If payment status is successful, update recruiter level
-}
+};
 
 routerPayOs.post("/create", async (req, res) => {
-  const { buyerName, description, returnUrl, cancelUrl, amount, price } =
-    req.body;
+  const {
+    userId,
+    buyerName,
+    description,
+    returnUrl,
+    cancelUrl,
+    amount,
+    price,
+  } = req.body;
 
   // Validate input
-  if (!description || !returnUrl || !cancelUrl || !amount || !price) {
+  if (
+    !description ||
+    !returnUrl ||
+    !cancelUrl ||
+    !amount ||
+    !price ||
+    !userId
+  ) {
     return res.json({
       error: -2,
       message: "Missing required parameters",
@@ -38,6 +53,7 @@ routerPayOs.post("/create", async (req, res) => {
   }
 
   const body = {
+    userId,
     orderCode: Number(String(new Date().getTime()).slice(-6)),
     buyerName,
     amount: price * amount,
@@ -60,6 +76,7 @@ routerPayOs.post("/create", async (req, res) => {
     }
 
     return res.status(200).json({
+      userId: userId,
       error: 0,
       message: "Success",
       data: paymentLinkRes,
@@ -111,6 +128,49 @@ function convertObjToQueryStr(object) {
     })
     .join("&");
 }
+
+routerPayOs.patch("/upgrade/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { amountPaid } = req.body; // Destructure amountPaid correctly from req.body
+    let amountJob = 0;
+
+    if (amountPaid === "3000") {
+      amountJob = 2;
+    } else if (amountPaid === "5000") {
+      amountJob = 5;
+    } else if (amountPaid === "9000") {
+      amountJob = 7;
+    }
+
+    // Find the user first to get the current jobPostingLimit
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: 1,
+        message: "User not found",
+        data: null,
+      });
+    }
+    // Update the user's jobPostingLimit
+    user.jobPostingLimit += amountJob;
+    await user.save();
+
+    return res.status(200).json({
+      error: 0,
+      message: "Allow post is update now. Check your profile"
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: -1,
+      message: "Failed to upgrade user",
+      data: null,
+    });
+  }
+});
+
 
 routerPayOs.post("/confirm-webhook", async (req, res) => {
   const { webhookUrl } = req.body;
