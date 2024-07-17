@@ -135,12 +135,14 @@ routerPayOs.patch("/upgrade/:userId", async (req, res) => {
     const { amountPaid } = req.body; // Destructure amountPaid correctly from req.body
     let amountJob = 0;
 
-    if (amountPaid === "3000") {
-      amountJob = 2;
-    } else if (amountPaid === "5000") {
-      amountJob = 5;
-    } else if (amountPaid === "9000") {
-      amountJob = 7;
+    if (amountPaid === 3000) {
+      amountJob += 2;
+    } 
+    if (amountPaid === 5000) {
+      amountJob += 5;
+    } 
+    if (amountPaid === 9000) {
+      amountJob += 7;
     }
 
     // Find the user first to get the current jobPostingLimit
