@@ -72,14 +72,14 @@ const initializeSocket = (server) => {
       socket.broadcast.to(roomId).emit("user-toggle-video", userId);
     });
 
-    socket.on("user-toggle-share", (userId, roomId) => {
+    socket.on("user-start-sharing", (userId, roomId) => {
       socket.join(roomId);
-      socket.broadcast.to(roomId).emit("user-toggle-share", userId);
+      socket.broadcast.to(roomId).emit("user-start-sharing", userId);
     });
 
-    socket.on("user-toggle-stopShare", (userId, roomId) => {
+    socket.on("user-stop-sharing", (userId, roomId) => {
       socket.join(roomId);
-      socket.broadcast.to(roomId).emit("user-toggle-stopShare", userId);
+      socket.broadcast.to(roomId).emit("user-stop-sharing", userId);
     });
 
     socket.on("user-leave", (userId, roomId) => {
