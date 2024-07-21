@@ -1,4 +1,10 @@
-import { cvDAO, jobAppliedDAO, jobDAO, userDAO } from "../dao/index.js";
+import {
+  cvDAO,
+  jobAppliedDAO,
+  jobDAO,
+  userDAO,
+  companiesDAO,
+} from "../dao/index.js";
 
 const getAllJobs = async (req, res) => {
   try {
@@ -79,7 +85,28 @@ const getJobDetails = async (req, res) => {
   try {
     const { jobId } = req.params;
     const job = await jobDAO.getJobById(jobId);
+    console.log("companyId from job:", job.recruitersID.companyID);
     res.status(200).json(job);
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+};
+
+const getCompanyByJobDetail = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const job = await jobDAO.getJobById(jobId);
+
+    const company = await companiesDAO.getCompanyDetailById(job.recruitersID.companyID);
+
+    console.log(job.recruitersID.companyID)
+    console.log(company)
+
+    if (!company) {
+      throw createError(404, "Company not found");
+    }
+
+    res.status(200).json(company);
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message });
   }
@@ -181,8 +208,8 @@ const getRecruiterJobsWithDetails = async (req, res) => {
 
 const RECRUITER_JOB_LIMITS = {
   1: 5,
-  2: 10, 
-  3: 15, 
+  2: 10,
+  3: 15,
 };
 
 const createJob = async (req, res) => {
@@ -196,11 +223,13 @@ const createJob = async (req, res) => {
     }
 
     const recruiterLevel = dataUser.recruiterLevel;
-    const recruiterPost= dataUser.jobPostingLimit;
+    const recruiterPost = dataUser.jobPostingLimit;
     console.log("level: ", recruiterLevel, "post: ", recruiterPost);
 
     if (recruiterPost <= 0) {
-      return res.status(403).json({ message: "Upgrade your package to be able to post more" });
+      return res
+        .status(403)
+        .json({ message: "Upgrade your package to be able to post more" });
     }
 
     // Create job
@@ -216,7 +245,6 @@ const createJob = async (req, res) => {
     res.status(error.status || 500).json({ message: error.message });
   }
 };
-
 
 const updateJob = async (req, res) => {
   try {
@@ -239,11 +267,11 @@ const deleteJob = async (req, res) => {
   }
 };
 
-
 export default {
   getAllJobs,
   getJobs,
   getJobDetails,
+  getCompanyByJobDetail,
   getPendingJobs,
   createJob,
   updateJob,

@@ -22,7 +22,7 @@ userRouter.delete("/logout", userController.deleteRefreshTokes);
 
 userRouter.post("/token", userController.getNewAccessTokens);
 
-userRouter.put("/:id", userController.updateProfile);
+userRouter.patch("/:id", userController.updateProfile);
 // Get all recruiters
 userRouter.get("/recruiters", userController.getAllRecruiters);
 

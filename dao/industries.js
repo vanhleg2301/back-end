@@ -3,7 +3,7 @@ import createError from 'http-errors';
 
 const getAllIndustries = async () => {
     try {
-        const industries = await Industry.find({});
+        const industries = await Industry.find({}).exec();
         return industries;
     } catch (error) {
         throw error;

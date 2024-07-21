@@ -1,6 +1,7 @@
 import Job from "../models/jobs.js";
 import createError from "http-errors";
 import User from "../models/users.js";
+import { companiesDAO } from "./index.js";
 
 const RECRUITER_JOB_LIMITS = {
   1: 5, // Level 1: 5 jobs
@@ -27,7 +28,6 @@ const decreaseJobPostingLimit = async (recruiterId) => {
   }
 };
 
-
 const getAllJobs = async () => {
   try {
     const jobs = await Job.find({}).sort({ createdAt: -1 }).exec();
@@ -49,10 +49,13 @@ const getJobById = async (jobId) => {
   try {
     const job = await Job.findById(jobId)
       .populate("recruitersID")
-      .populate("industry");
+      .populate("industry")
+      .exec();
     if (!job) {
       throw createError(404, "Job not found");
     }
+
+    
     return job;
   } catch (error) {
     throw error;
@@ -173,5 +176,5 @@ export default {
   updateJob,
   deleteJob,
   rejectJob,
-  getJobByRecruiterID
+  getJobByRecruiterID,
 };

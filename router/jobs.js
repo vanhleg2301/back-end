@@ -10,6 +10,7 @@ jobRouter.get('/find', jobController.getJobs);
 
 // Get job details
 jobRouter.get('/:jobId', jobController.getJobDetails);
+jobRouter.get('/com/:jobId', jobController.getCompanyByJobDetail);
 
 // Get list cv of job
 jobRouter.get('/jobCv/:jobId', jobController.getJobHaveCv);
