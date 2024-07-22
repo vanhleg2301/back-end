@@ -201,8 +201,22 @@ const updateJobStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const getAmountCvByJobId = async (req, res) => {
+  const jobId = req.params.jobID;
+
+  try {
+    const amountCv = await jobAppliedDAO.getAmountCvByJobId(jobId);
+    res.status(200).json(amountCv);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
 export default {
   getAppliedJobs,
+  getAmountCvByJobId,
   applyForJob,
   applyForJobWithYourCv,
   getJobsAppliedByRecruiter,

@@ -63,10 +63,10 @@ const jobSchema = new Schema(
     deadline: {
       type: Date,
     },
-    // Job Status: 1-Approve, 0-Reject, 2-Pending
+    // Job Status: 0-Approve, 2-Reject, 1-Pending
     status: {
       type: Number,
-      default: 2,
+      default: 1,
       // required: true,
     },
     location: {

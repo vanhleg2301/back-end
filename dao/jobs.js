@@ -77,7 +77,7 @@ const approveJob = async (jobId) => {
   try {
     const job = await Job.findByIdAndUpdate(
       jobId,
-      { status: 1 },
+      { status: 0 },
       { new: true }
     );
     if (!job) {
@@ -93,7 +93,7 @@ const rejectJob = async (jobId) => {
   try {
     const job = await Job.findByIdAndUpdate(
       jobId,
-      { status: 0 },
+      { status: 2 },
       { new: true }
     );
     if (!job) {

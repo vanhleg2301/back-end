@@ -32,7 +32,7 @@ const getCompanyDetailById = async (id) => {
 
 const createCompany = async (companyData) => {
   try {
-    console.log("Received company data:", companyData); // Log received data for debugging
+    // console.log("Received company data:", companyData); // Log received data for debugging
     const newCompany = new Companies({
       recruiterID: companyData.recruiterID,
       companyName: companyData.companyName,
@@ -72,7 +72,41 @@ const  getCompanyByCompanyId = async (companyId) => {
     }
 }
 
+const activeCompany = async (companyId) => {
+  try {
+    const job = await Companies.findByIdAndUpdate(
+      companyId,
+      { companyStatus: 0 },
+      { new: true }
+    );
+    if (!job) {
+      throw createError(404, "Job not found");
+    }
+    return job;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const deactiveCompany = async (companyId) => {
+  try {
+    const job = await Companies.findByIdAndUpdate(
+      companyId,
+      { companyStatus: 2 },
+      { new: true }
+    );
+    if (!job) {
+      throw createError(404, "Job not found");
+    }
+    return job;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default {
+  activeCompany,
+  deactiveCompany,
   getAllCompanies,
   searchCompanyByName,
   getCompanyDetailById,

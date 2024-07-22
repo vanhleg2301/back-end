@@ -41,7 +41,7 @@ const companySchema = new Schema({
         type: String,
         // required: true
     },
-    // Company Status: Bronze, Silver, Gold, Diamond
+    // Company Status: 0 active, 1 pending, 2 reject
     companyStatus: {
         type: Number,
         // required: true

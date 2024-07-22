@@ -61,10 +61,7 @@ const createCompany = async (req, res) => {
       numberOfEmployees,
       companyStatus,
     } = req.body;
-
-    // Optionally log the received company data for debugging
-    console.log("Received company data:", req.body);
-
+    
     // Check if both files are uploaded
     if (!req.files.logo || !req.files.businessLicense) {
       return res
@@ -77,15 +74,22 @@ const createCompany = async (req, res) => {
 
     // Reference to the storage location in Firebase
     const fileRefLogo = ref(storage, `uploads/logo/${logoFile.name}`);
-    const fileRefBusiness = ref(storage, `uploads/business/${businessLicenseFile.name}`);
+    const fileRefBusiness = ref(
+      storage,
+      `uploads/business/${businessLicenseFile.name}`
+    );
 
     // Upload files to Firebase Storage
     const snapshotLogo = await uploadBytes(fileRefLogo, logoFile.data, {
       contentType: logoFile.mimetype,
     });
-    const snapshotBusiness = await uploadBytes(fileRefBusiness, businessLicenseFile.data, {
-      contentType: businessLicenseFile.mimetype,
-    });
+    const snapshotBusiness = await uploadBytes(
+      fileRefBusiness,
+      businessLicenseFile.data,
+      {
+        contentType: businessLicenseFile.mimetype,
+      }
+    );
 
     // Get download URLs for the files
     const fileURLLogo = await getDownloadURL(snapshotLogo.ref);
@@ -126,7 +130,6 @@ const createCompany = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 const createCompanyWithNoFiles = async (req, res) => {
   try {
@@ -173,22 +176,24 @@ const getCompanyByRecruiterId = async (req, res) => {
       return res.status(400).json({ error: "Recruiter ID invalid" });
     }
     const user = await userDAO.getUserById(recruiterId);
-    console.log(user.companyID)
+    console.log(user.companyID);
     const companies = await companiesDAO.getCompanyByCompanyId(user.companyID);
-    console.log(companies)
+    console.log(companies);
 
     res.status(200).json(companies);
   } catch (error) {
     res.status(500).json({ error: error.toString() });
   }
-}
+};
 
 const patchCompanyId = async (req, res) => {
   try {
     const { companyId, recruiterID } = req.body;
 
     if (!companyId || !recruiterID) {
-      return res.status(400).json({ error: "Company ID and Recruiter ID are required" });
+      return res
+        .status(400)
+        .json({ error: "Company ID and Recruiter ID are required" });
     }
 
     const company = await userDAO.updateCompanyID(companyId, recruiterID);
@@ -196,10 +201,31 @@ const patchCompanyId = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.toString() });
   }
+};
 
-}
+const activeCompany = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const activeCompany = await companiesDAO.activeCompany(id);
+    res.status(200).json(activeCompany);
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+};
+
+const deactiveCompany = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const activeCompany = await companiesDAO.deactiveCompany(id);
+    res.status(200).json(activeCompany);
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+};
 
 export default {
+  activeCompany,
+  deactiveCompany,
   getAllCompanies,
   searchCompanyByName,
   getCompanyDetailById,

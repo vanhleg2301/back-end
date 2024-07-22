@@ -109,8 +109,19 @@ const rejectJobApplied = async (jobId, applicantId) => {
   }
 };
 
+const getAmountCvByJobId = async (jobId) => {
+  try {
+    return await JobApplied.find({ jobID: jobId })
+      .sort({ createdAt: -1 })
+      .exec();
+  } catch (error) {
+    throw new Error("Error getting amount of CV: " + error.message);
+  }
+};
+
 export default {
   getAppliedJobsByApplicantId,
+  getAmountCvByJobId,
   appliedForJob,
   getJobsAppliedByRecruiter,
   getJobByJobId,

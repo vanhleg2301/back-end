@@ -1,12 +1,11 @@
 
 
 ###
-GET http://localhost:9999/room
-Content-Type: application/json
+GET http://localhost:9999/cv/666583acd84ebdff8d212ba2
 
-{
-        "roomId": "wdc-asdx-qsa"
-}
+###
+GET http://localhost:9999/job/jobCv/6697a81e66a736e49797bbba
+
 
 ###
 POST http://localhost:9999/room/668c076017a5f0a51a79cda5

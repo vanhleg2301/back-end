@@ -11,5 +11,8 @@ companiesRouter.post("/", companiesController.createCompany);
 companiesRouter.patch("/", companiesController.patchCompanyId);
 companiesRouter.get("/com/:recruiterId", companiesController.getCompanyByRecruiterId);
 
+companiesRouter.patch("/:id/active", companiesController.activeCompany);
+companiesRouter.patch("/:id/deactive", companiesController.deactiveCompany);
+
 
 export default companiesRouter;
