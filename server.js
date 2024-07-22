@@ -16,6 +16,7 @@ import {
   routerPayOs,
   notificationRouter,
   routerPayOsPay,
+  roomRouter,
 } from "./router/index.js";
 import cookieParser from "cookie-parser";
 import http from "http"; // Import http to create an HTTP server
@@ -52,6 +53,7 @@ app.use(
 //define uri couter
 app.use("/company", companiesRouter);
 app.use("/job", jobRouter);
+app.use("/room", roomRouter);
 app.use("/cv", cvRouter);
 app.use("/user", userRouter);
 app.use("/industry", industryRouter);

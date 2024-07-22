@@ -1,8 +1,20 @@
 
 
 ###
-GET http://localhost:9999/cv/666583acd84ebdff8d212ba2
+GET http://localhost:9999/room
+Content-Type: application/json
 
+{
+        "roomId": "wdc-asdx-qsa"
+}
+
+###
+POST http://localhost:9999/room/668c076017a5f0a51a79cda5
+Content-Type: application/json
+
+{
+        "roomId": "wdc-asdx-qsa"
+}
 
 ###
 POST http://localhost:9999/user/sendMailFrame

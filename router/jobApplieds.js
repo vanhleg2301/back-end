@@ -5,6 +5,7 @@ const jobAppliedRouter = express.Router();
 
 jobAppliedRouter.get('/:applicantId', jobAppliedController.getAppliedJobs);
 jobAppliedRouter.post('/apply', jobAppliedController.applyForJob);
+jobAppliedRouter.post('/applyYourCv', jobAppliedController.applyForJobWithYourCv);
 jobAppliedRouter.get('/recruiter/:recruiterId', jobAppliedController.getJobsAppliedByRecruiter);
 jobAppliedRouter.get('/jobs/:jobID', jobAppliedController.getJobApplication);
 

@@ -22,8 +22,8 @@ const appliedForJob = async (jobId, applicantId, fileURL, textDes) => {
     const existingApplication = await JobApplied.findOne({
       jobID: jobId,
       applicantID: applicantId,
-      textDes: textDes,
       fileURL: fileURL,
+      textDes: textDes,
     });
     if (existingApplication) {
       throw new Error("Applicant has already applied for this job.");

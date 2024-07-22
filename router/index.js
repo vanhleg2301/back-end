@@ -7,7 +7,7 @@ import jobAppliedRouter from "./jobApplieds.js";
 import notificationRouter from './notification.js'
 import routerPayOs from './payos.js'
 import routerPayOsPay from './payosPay.js'
-
+import roomRouter from './rooms.js'
 export {
     companiesRouter,
     jobRouter,
@@ -17,5 +17,6 @@ export {
     jobAppliedRouter,
     routerPayOs,
     routerPayOsPay,
-    notificationRouter
+    notificationRouter,
+    roomRouter
 }

@@ -5,6 +5,7 @@ import JobApplied from './jobApplieds.js';
 import Job from './jobs.js';
 import User from './users.js';
 import Notification from './notifications.js';
+import Room from './rooms.js';
 export {
     Company,
     CV,
@@ -12,5 +13,6 @@ export {
     JobApplied,
     Job,
     User,
-    Notification
+    Notification,
+    Room
 }
