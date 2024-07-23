@@ -30,6 +30,7 @@ const getCompanyDetailById = async (id) => {
   }
 };
 
+
 const createCompany = async (companyData) => {
   try {
     // console.log("Received company data:", companyData); // Log received data for debugging
@@ -54,7 +55,8 @@ const createCompany = async (companyData) => {
 
 const getCompanyByRecruiterId = async (recruiterId) => {
   try {
-    const companies = await Companies.find({ recruiterID: recruiterId })
+    const companies = await Companies.findOne({ recruiterID: recruiterId })
+      .sort({ createdAt: -1 })  // Sort by createdAt field in descending order
       .populate("recruiterID")
       .exec();
     return companies;
@@ -63,14 +65,15 @@ const getCompanyByRecruiterId = async (recruiterId) => {
   }
 };
 
-const  getCompanyByCompanyId = async (companyId) => {
-    try {
-        const companies = Companies.find({_id: companyId}).exec()
-        return companies
-    } catch (error) {
-        throw error 
-    }
-}
+
+const getCompanyByCompanyId = async (companyId) => {
+  try {
+    const companies = Companies.find({ _id: companyId }).exec();
+    return companies;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const activeCompany = async (companyId) => {
   try {
@@ -86,7 +89,7 @@ const activeCompany = async (companyId) => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 const deactiveCompany = async (companyId) => {
   try {
@@ -102,7 +105,7 @@ const deactiveCompany = async (companyId) => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 export default {
   activeCompany,

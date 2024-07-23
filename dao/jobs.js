@@ -55,7 +55,6 @@ const getJobById = async (jobId) => {
       throw createError(404, "Job not found");
     }
 
-    
     return job;
   } catch (error) {
     throw error;

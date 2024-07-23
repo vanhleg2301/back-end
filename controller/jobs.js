@@ -97,10 +97,12 @@ const getCompanyByJobDetail = async (req, res) => {
     const { jobId } = req.params;
     const job = await jobDAO.getJobById(jobId);
 
-    const company = await companiesDAO.getCompanyDetailById(job.recruitersID.companyID);
+    const company = await companiesDAO.getCompanyDetailById(
+      job.recruitersID.companyID
+    );
 
-    console.log(job.recruitersID.companyID)
-    console.log(company)
+    console.log(job.recruitersID.companyID);
+    console.log(company);
 
     if (!company) {
       throw createError(404, "Company not found");
@@ -224,7 +226,7 @@ const createJob = async (req, res) => {
 
     const recruiterLevel = dataUser.recruiterLevel;
     const recruiterPost = dataUser.jobPostingLimit;
-    console.log("level: ", recruiterLevel, "post: ", recruiterPost);
+    // console.log("level: ", recruiterLevel, "post: ", recruiterPost);
 
     if (recruiterPost <= 0) {
       return res
@@ -267,8 +269,35 @@ const deleteJob = async (req, res) => {
   }
 };
 
+const getCompanyLogoByJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    // Fetch the job details using jobId
+    const job = await jobDAO.getJobById(jobId);
+
+    // Fetch the company details using the recruitersID from the job details
+    const company = await companiesDAO.getCompanyByRecruiterId(
+      job.recruitersID._id
+    );
+
+    if (!company) {
+      throw new Error("Company not found");
+    }
+
+    // console.log("company1: ", company.logo);
+    // Extract the logo URL from the company details
+    const companyLogo = company.logo;
+
+    res.status(200).json({ logo: companyLogo });
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+};
+
 export default {
   getAllJobs,
+  getCompanyLogoByJob,
   getJobs,
   getJobDetails,
   getCompanyByJobDetail,

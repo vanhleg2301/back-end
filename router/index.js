@@ -8,6 +8,8 @@ import notificationRouter from './notification.js'
 import routerPayOs from './payos.js'
 import routerPayOsPay from './payosPay.js'
 import roomRouter from './rooms.js'
+import jobSaveRouter from './jobSave.js'
+
 export {
     companiesRouter,
     jobRouter,
@@ -18,5 +20,6 @@ export {
     routerPayOs,
     routerPayOsPay,
     notificationRouter,
+    jobSaveRouter,
     roomRouter
 }

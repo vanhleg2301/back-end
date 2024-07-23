@@ -1,7 +1,7 @@
 
 
 ###
-GET http://localhost:9999/cv/666583acd84ebdff8d212ba2
+GET http://localhost:9999/job/job/669eb23dda662104b565825b/logo
 
 ###
 GET http://localhost:9999/job/jobCv/6697a81e66a736e49797bbba
