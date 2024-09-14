@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer"; // Import nodemailer to send emails
 import crypto from "crypto"; // Import crypto to generate secure passwords
 import { DateTime } from "luxon";
+import User from "../models/users.js";
+import { sendMailHelper } from "../utils/helperMail.js";
 
 let refreshTokens = [];
 
@@ -176,7 +178,7 @@ const registerRecruiter = async (req, res) => {
 
 function generateAccessToken(userID) {
   return jwt.sign({ id: userID }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15s",
+    expiresIn: "300s",
   });
 }
 const generateRefreshToken = (userID) => {
@@ -187,12 +189,28 @@ const generateRefreshToken = (userID) => {
 };
 
 const createRefreshToken = async (userId) => {
+  // Find the user by ID and check if they already have a refresh token
+  const user = await User.findById(userId);
+
+  // Check if the user already has a refresh token and it hasn't expired
+  if (user.refreshToken && user.refreshTokenExpiresAt > Date.now()) {
+    // Return the existing refresh token and expiration date if it's still valid
+    return {
+      token: user.refreshToken,
+      expiresAt: user.refreshTokenExpiresAt,
+    };
+  }
+
+  // If no valid refresh token exists, generate a new one
   const token = generateRefreshToken(userId);
   const expiresAt = DateTime.now().plus({ days: 30 }).toJSDate(); // Expires in 30 days
+
+  // Store the new refresh token and expiration date in the database
   await userDAO.createRefreshToken(userId, token, expiresAt);
+
   return {
     token,
-    expiresAt: DateTime.fromJSDate(expiresAt).toFormat("HH:mm:ss / dd-MM-yyyy"),
+    expiresAt: expiresAt,
   };
 };
 
@@ -219,12 +237,13 @@ const login = async (req, res) => {
       });
     }
 
-    const userPayload = { id: user._id };
+    const userPayload = { _id: user._id };
 
     const accessToken = generateAccessToken(userPayload);
-    const { token: refreshToken, expiresAt } = await createRefreshToken(
-      user._id
-    );
+
+    // Call createRefreshToken to either return an existing refresh token or create a new one
+    const { token, expiresAt } = await createRefreshToken(user._id);
+
     // Set the access token in the response header
     res.set("Authorization", "Bearer " + accessToken);
 
@@ -232,7 +251,7 @@ const login = async (req, res) => {
       success: true,
       user,
       accessToken,
-      refreshToken,
+      refreshToken: token,
       refreshTokenExpiresAt: expiresAt,
     });
   } catch (error) {
@@ -377,72 +396,24 @@ const chooseCompany = async (req, res, next) => {
   }
 };
 
-const generateSecurePassword = () => {
-  // Generate a random secure password
-  const length = 12; // Length of the generated password
-  const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?"; // Characters to include in the password
-  let password = "";
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = crypto.randomInt(0, charset.length);
-    password += charset[randomIndex];
-  }
-
-  // console.log("password: ",password)
-  return password;
-};
-
-const sendMail = async (req, res, next) => {
-  // send mail
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465, // 587 or 465 or 534
-    secure: true, // true for 465, false for other ports
-    auth: {
-      user: "anhhcvhe161142@fpt.edu.vn", // aceinterviewsp101
-      pass: "uxvw zvuj yugl hgsa", // wdp3012024
-    },
-  });
-
-  // Verify connection configuration
-  transporter.verify(function (error, success) {
-    if (error) {
-      console.error("SMTP connection error:", error);
-    } else {
-      console.log("SMTP connection successful. Ready to send emails.");
-    }
-  });
-
-  // Enable debugging output
-  transporter.on("debug", (info) => {
-    console.log("Debugging info:", info);
-  });
-
+const sendMail = async (req, res) => {
   const { email } = req.body;
 
-  // Check mail in database
-
-  // Generate a random password
-  const newPassword = generateSecurePassword();
-
   try {
-    // Send email
-    const info = await transporter.sendMail({
-      from: "anhhcvhe161142@fpt.edu.vn",
-      to: email,
-      subject: "Your new password from AceInterview",
-      text: `Your new password is: ${newPassword}`,
-    });
+    // Send the email and get the result
+    const result = await sendMailHelper(email);
 
-    res.status(200).send({
-      message:
-        "Password updated successfully! Check your email for the new password.",
-      newpass: newPassword,
-    });
+    // If the email was successfully sent
+    if (result.success) {
+      res.status(200).json({
+        message:
+          "Password updated successfully! Check your email for the new password.",
+        newpass: result.newPassword,
+      });
+    }
   } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).send("Failed to send email.");
+    console.error("Error in email sending process:", error);
+    res.status(500).json({ message: "Failed to send email." });
   }
 };
 

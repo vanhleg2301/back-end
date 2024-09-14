@@ -1,0 +1,32 @@
+
+###
+GET http://localhost:9999/user
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6eyJfaWQiOiI2NmUxODZlNDE0N2I2ZTcwNGZhODJkNTMifSwiaWF0IjoxNzI2MTU5MDc0LCJleHAiOjE3MjYxNTkzNzR9.HHWoQnirj4XuHbllVYf9PwcLJPz1Q2InaqJrINbTaME
+
+###
+POST http://localhost:9999/user/forgot-password/sendmail
+Content-Type: application/json
+
+{
+        "email": "vanhleg2301@gmail.com"
+}
+
+###
+POST http://localhost:9999/user/login
+Content-Type: application/json
+
+{
+        "identifier": "vanhvanh1",
+        "password": "123"
+}
+
+###
+POST http://localhost:9999/user/register
+Content-Type: application/json
+
+{ 
+    "username": "vanhvanh2", 
+    "password": "123", 
+    "email": "vanhleg697test2@gmail.com", 
+    "fullName": "Hoang Viet Anh"
+}

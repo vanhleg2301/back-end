@@ -4,9 +4,8 @@ import authJWT from "../middleware/authJWT.js";
 
 const userRouter = express.Router();
 
-// Get list of users (applicants, recruiters)
 userRouter.get("/", authJWT.authenticationToken, userController.getAllUsers);
-userRouter.get("/user",  userController.getAllUsers);
+userRouter.get("/user", userController.getAllUsers);
 
 // Đăng nhập người dùng
 userRouter.post("/login", userController.login);

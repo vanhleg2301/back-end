@@ -1,6 +1,6 @@
 import User from "../models/users.js";
 import bcrypt from "bcrypt";
-
+import { DateTime } from "luxon";
 import createError from "http-errors";
 
 const getAllUsers = async () => {
@@ -92,7 +92,7 @@ const createUser = async (userData) => {
 
 const getUserById = async (userId) => {
   try {
-    const user = await User.findById({_id: userId}).exec();
+    const user = await User.findById({ _id: userId }).exec();
     if (!user) {
       throw createError(404, "User not found");
     }
@@ -133,8 +133,6 @@ const activateUser = async (userId) => {
     throw error;
   }
 };
-
-
 
 const getAllRecruiters = async () => {
   try {
@@ -207,10 +205,10 @@ const updatePassword = async (email, newPassword) => {
     const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
 
     const updatedUser = await User.findOneAndUpdate(
-        { email: email }, 
-        { $set: { hash_password: hashedPassword } }, 
-        { new: true } 
-      );
+      { email: email },
+      { $set: { hash_password: hashedPassword } },
+      { new: true }
+    );
 
     // console.log("updatedUser: ", updatedUser);
     return updatedUser;
@@ -235,15 +233,27 @@ const getRecruiterEmailById = async (recruiterId) => {
     }
     return recruiter.email;
   } catch (error) {
-    throw error;  
-  } 
-}
+    throw error;
+  }
+};
 
 const createRefreshToken = async (userId, token, expiresAt) => {
-  await User.findByIdAndUpdate(userId, {
+  // Find the user by ID
+  const user = await User.findById(userId).exec();
+
+  // If the user already has a refresh token, skip the update
+  if (user.refreshToken) {
+    console.log("User already has a refresh token. Skipping update.");
+    return;
+  } else {
+    // Otherwise, update the user's refresh token and expiration date
+    await User.findByIdAndUpdate(userId, {
       refreshToken: token,
-      refreshTokenExpiresAt: expiresAt
-  }).exec();
+      refreshTokenExpiresAt: DateTime.fromJSDate(expiresAt).toFormat(
+        "HH:mm:ss / dd-MM-yyyy"
+      ),
+    }).exec();
+  }
 };
 
 const updateCompanyID = async (companyId, recruiterID) => {
@@ -257,8 +267,7 @@ const updateCompanyID = async (companyId, recruiterID) => {
   } catch (error) {
     throw error;
   }
-}
-
+};
 
 export default {
   updateCompanyID,
